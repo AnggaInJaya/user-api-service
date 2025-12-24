@@ -7,18 +7,16 @@ User api service Demonstrates clean Laravel code applying SOLID principles (SRP,
 
 ## Table of Contents
 - [Features](#features)
-- [Architecture](#architecture)
-- [Directory Structure](#directory-structure)
+- [Tech Stack](#tech-stack)
+- [Principles and Structure](#principles-and-structure)
+- [Project Structure](#project-structure)
 - [Seeded Test Users](#seeded-test-users)
 - [Setup](#setup)
 - [Running With Docker](#running-with-docker)
 - [Running Locally](#running-locally)
 - [Authentication Flow](#authentication-flow)
-- [Sample Endpoints](#sample-endpoints) 👈 **POSTMAN Added Here**
 - [Error Format](#error-format)
 - [Testing](#testing)
-- [Contributing](#contributing)
-- [Security](#security)
 
 ---
 
