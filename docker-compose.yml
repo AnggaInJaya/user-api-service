@@ -1,0 +1,60 @@
+services:
+  userapi_app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: userapi_app
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - userapidb
+    command: >
+      sh -c "
+      until nc -z userapidb 5432; do
+        echo 'Waiting for database...';
+        sleep 1;
+      done;
+      echo 'Database ready';
+      composer install --no-interaction --prefer-dist --optimize-autoloader;
+      php artisan key:generate --force;
+      php artisan migrate --force;
+      php artisan db:seed --force;
+      php-fpm
+      "
+    networks:
+      - userapi_network
+
+  userapi_nginx:
+    image: nginx:alpine
+    container_name: userapi_nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - userapi_app
+    networks:
+      - userapi_network
+
+  userapidb:
+    image: postgres:15
+    container_name: userapidb
+    environment:
+      POSTGRES_DB: users_api
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - userapi_pgdata:/var/lib/postgresql/data
+    networks:
+      - userapi_network
+
+networks:
+  userapi_network:
+    driver: bridge
+
+volumes:
+  userapi_pgdata:
